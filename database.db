@@ -1,0 +1,39 @@
+# populate_db.py
+
+from app import db, Donor, Recipient
+from sample_data import donors, recipients
+
+def add_donors():
+    for donor in donors:
+        existing = Donor.query.filter_by(name=donor['name'], contact=donor['contact']).first()
+        if not existing:
+            new_donor = Donor(
+                name=donor['name'],
+                blood_group=donor['blood_group'],
+                contact=donor['contact'],
+                email=donor['email'],
+                city=donor['city']
+            )
+            db.session.add(new_donor)
+    db.session.commit()
+    print("Donors added successfully!")
+
+def add_recipients():
+    for recipient in recipients:
+        existing = Recipient.query.filter_by(name=recipient['name'], contact=recipient['contact']).first()
+        if not existing:
+            new_recipient = Recipient(
+                name=recipient['name'],
+                blood_group=recipient['blood_group'],
+                contact=recipient['contact'],
+                email=recipient['email'],
+                city=recipient['city']
+            )
+            db.session.add(new_recipient)
+    db.session.commit()
+    print("Recipients added successfully!")
+
+if __name__ == "__main__":
+    with db.app.app_context():
+        add_donors()
+        add_recipients()
